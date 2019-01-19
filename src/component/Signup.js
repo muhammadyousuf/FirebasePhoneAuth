@@ -3,7 +3,7 @@ import * as firebase from 'firebase';
 
 
 
-
+var conform;
 class SignUp extends Component {
     constructor(props) {
         super(props);
@@ -13,6 +13,7 @@ class SignUp extends Component {
             codeInput: '',
             phoneNumber: '+92',
             confirmResult: null,
+            code: "",
         }
     }
 
@@ -26,16 +27,17 @@ class SignUp extends Component {
                 // SMS sent. Prompt user to type the code from the message, then sign the
                 // user in with confirmationResult.confirm(code).
                 window.confirmationResult = confirmationResult;
-                console.log('result',confirmationResult);
+                conform = confirmationResult;
+                console.log('result', confirmationResult);
             }).catch(function (error) {
                 // Error; SMS not sent
                 console.log('erro')
                 // ...
             })
-        
+
     }
 
-    
+
 
 
     delet() {
@@ -57,12 +59,30 @@ class SignUp extends Component {
             window.recaptchaWidgetId = widgetId;
         });
     }
+    verify() {
+        var code = this.state.code;
+        window.verifyingCode = true;
+        console.log('conform', code)
+        window.confirmationResult.confirm(code).then(function (result) {
+            // User signed in successfully.
+            var user = result.user;
+            console.log('usre', user)
+            window.verifyingCode = false;
+            // ...
+        }).catch(function (error) {
+            // User couldn't sign in (bad verification code?)
+            // ...
+        });
+    }
     render() {
         return (
             <div>
                 <h1>Hello</h1>
-                <input value={this.state.value} onChange={(event) => { this.setState({ phoneNumber: event.target.value }); console.log('num', this.state.phoneNumber) }} />
+                <input value={this.state.phoneNumber} onChange={(event) => { this.setState({ phoneNumber: event.target.value }); console.log('num', this.state.phoneNumber) }} />
                 <button id="sign-in-button" onClick={this.SignUp.bind(this)} >SignUp</button> <br />
+
+                <input value={this.state.code} onChange={(event) => { this.setState({ code: event.target.value }); console.log('code', this.state.code) }} placeholder="XXXXXX" /><br />
+                <button  onClick={this.verify.bind(this)} >verification Code</button> <br /><br />
                 <button onClick={this.delet.bind(this)} >Delete</button>
             </div>
         );
