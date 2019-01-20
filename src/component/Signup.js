@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
+import * as admin from "firebase-admin";
 
 
 
-var conform;
 class SignUp extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +27,7 @@ class SignUp extends Component {
                 // SMS sent. Prompt user to type the code from the message, then sign the
                 // user in with confirmationResult.confirm(code).
                 window.confirmationResult = confirmationResult;
-                conform = confirmationResult;
+                // conform = confirmationResult;
                 console.log('result', confirmationResult);
             }).catch(function (error) {
                 // Error; SMS not sent
@@ -41,12 +41,19 @@ class SignUp extends Component {
 
 
     delet() {
-        let fire = firebase.storage().ref().child('nic/');
-        console.log('deleted', fire)
+        // let fire = firebase.storage().ref().child('nic/');
+        // console.log('deleted', fire)
+        admin.auth().deleteUser('05svqZ68C8fKgjOmszhwaPxj5D32')
+  .then(function() {
+    console.log("Successfully deleted user");
+  })
+  .catch(function(error) {
+    console.log("Error deleting user:", error);
+  });
     }
 
     componentDidMount() {
-        console.log('this----', window.recaptchaVerifier)
+       
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
             'size': 'invisible',
             'callback': function (response) {
@@ -55,14 +62,16 @@ class SignUp extends Component {
                 console.log('res', response)
             }
         });
-        window.recaptchaVerifier.render().then(function (widgetId) {
-            window.recaptchaWidgetId = widgetId;
-        });
+        // window.recaptchaVerifier.render().then(function (widgetId) {
+        //     window.recaptchaWidgetId = widgetId;
+        // });
+        
     }
     verify() {
         var code = this.state.code;
         window.verifyingCode = true;
         console.log('conform', code)
+
         window.confirmationResult.confirm(code).then(function (result) {
             // User signed in successfully.
             var user = result.user;
