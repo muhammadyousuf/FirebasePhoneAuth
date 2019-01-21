@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import * as admin from "firebase-admin";
 
 
 
@@ -43,17 +42,18 @@ class SignUp extends Component {
     delet() {
         // let fire = firebase.storage().ref().child('nic/');
         // console.log('deleted', fire)
-        admin.auth().deleteUser('05svqZ68C8fKgjOmszhwaPxj5D32')
-  .then(function() {
-    console.log("Successfully deleted user");
-  })
-  .catch(function(error) {
-    console.log("Error deleting user:", error);
-  });
+        console.log('delet')
+        // admin.auth().deleteUser('05svqZ68C8fKgjOmszhwaPxj5D32')
+        //     .then(function () {
+        //         console.log("Successfully deleted user");
+        //     })
+        //     .catch(function (error) {
+        //         console.log("Error deleting user:", error);
+        //     });
     }
 
     componentDidMount() {
-       
+
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
             'size': 'invisible',
             'callback': function (response) {
@@ -65,7 +65,7 @@ class SignUp extends Component {
         // window.recaptchaVerifier.render().then(function (widgetId) {
         //     window.recaptchaWidgetId = widgetId;
         // });
-        
+
     }
     verify() {
         var code = this.state.code;
@@ -91,7 +91,7 @@ class SignUp extends Component {
                 <button id="sign-in-button" onClick={this.SignUp.bind(this)} >SignUp</button> <br />
 
                 <input value={this.state.code} onChange={(event) => { this.setState({ code: event.target.value }); console.log('code', this.state.code) }} placeholder="XXXXXX" /><br />
-                <button  onClick={this.verify.bind(this)} >verification Code</button> <br /><br />
+                <button onClick={this.verify.bind(this)} >verification Code</button> <br /><br />
                 <button onClick={this.delet.bind(this)} >Delete</button>
             </div>
         );
