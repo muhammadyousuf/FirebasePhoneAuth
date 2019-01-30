@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 
+import jsPDF from 'jspdf';
 
-
+var doc = new jsPDF({
+    orientation: 'landscape',
+    unit: 'in',
+    format: [640, 640]
+  })
 class SignUp extends Component {
     constructor(props) {
         super(props);
@@ -40,8 +45,9 @@ class SignUp extends Component {
 
 
     delet() {
-        // let fire = firebase.storage().ref().child('nic/');
-        // console.log('deleted', fire)
+
+        let fire = firebase.storage().ref().child('picture/').child('1.PNG').delete();
+        console.log('deleted', fire)
         console.log('delet')
         // admin.auth().deleteUser('05svqZ68C8fKgjOmszhwaPxj5D32')
         //     .then(function () {
@@ -65,6 +71,20 @@ class SignUp extends Component {
         // window.recaptchaVerifier.render().then(function (widgetId) {
         //     window.recaptchaWidgetId = widgetId;
         // });
+
+    }
+    pdf() {
+        console.log("Go")
+       
+        // this.props.history.push('/MyPdfViewer');
+        const user = `Hello Muhammad Yousuf
+        
+Add Succeefully`
+//var img = new Image();
+//img.src = "https://firebasestorage.googleapis.com/v0/b/mechanic-6d028.appspot.com/o/picture%2F2.jpg?alt=media&token=35893644-b173-4de0-ba3f-f9429259cf07"
+        doc.text(user, 1, 1)
+     //   doc.addImage(img, 'JPEG', 15, 40, 180, 160);
+        doc.save('two-by-four.pdf')
 
     }
     verify() {
@@ -93,6 +113,7 @@ class SignUp extends Component {
                 <input value={this.state.code} onChange={(event) => { this.setState({ code: event.target.value }); console.log('code', this.state.code) }} placeholder="XXXXXX" /><br />
                 <button onClick={this.verify.bind(this)} >verification Code</button> <br /><br />
                 <button onClick={this.delet.bind(this)} >Delete</button>
+                <button onClick={this.pdf.bind(this)} >Next</button>
             </div>
         );
     }
